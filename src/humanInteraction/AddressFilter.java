@@ -14,7 +14,7 @@ public class AddressFilter {
 	 * Constructor. Initializes input.
 	 */
 	public AddressFilter() {
-		input = "hans tausens alle 16 4. tv 3487 fgiushdfg n s d iu f h gnsdfughn";
+		input = "H.C. Lumbyes Gade 1,2 2100 København Ø ";
 	}
 
 	/**
