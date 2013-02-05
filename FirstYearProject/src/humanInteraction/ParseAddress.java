@@ -13,38 +13,36 @@ import java.util.regex.*;
  * @author jakobvase
  * @version 1.0, 30/1-2013
  */
-public class AddressFilter {
-	private String input;
+public class ParseAddress {
 
 	/**
 	 * Constructor. Initializes input.
 	 */
-	public AddressFilter() {
-		input = "H. C. Lundbyes vej 23, 4. tv, 2500 Valby";
+	public ParseAddress() {
 	}
 
 	/**
 	 * The second and working try, where it's assumed that the information is input in the right order.
 	 */
-	public void test() throws BadUserException {
-		if(input.length() < 2) {
+	public String parseAddress(String s) throws BadUserException {
+		if(s.length() < 2) {
 			throw new BadUserException("Invalid input");
 		}
-		System.out.println("Input: " + input);
-		String[] output = new String[5];
+		System.out.println("Input: " + s);
+		String[] output = new String[6];
 
 		// Finds address and city
 		Pattern p = Pattern.compile("[0-9,]|\\si\\s");
-		String[] inputArray = p.split(input);
+		String[] inputArray = p.split(s);
 		output[0] = inputArray[0].trim();
 		String numbers = "";
-		if(input.length() != output[0].length()) {
-			numbers = input.substring(output[0].length() + 1);
+		if(s.length() != output[0].length()) {
+			numbers = s.substring(output[0].length() + 1);
 		}
 		if(inputArray.length > 1) {
-			output[4] = inputArray[inputArray.length - 1].trim();
-			if(input.length() > output[0].length() + output[4].length() + 1) {
-				numbers = input.substring(output[0].length() + 1, input.length() - (output[4].length() + 1));
+			output[5] = inputArray[inputArray.length - 1].trim();
+			if(s.length() > output[0].length() + output[5].length() + 1) {
+				numbers = s.substring(output[0].length() + 1, s.length() - (output[5].length() + 1));
 			} else {
 				numbers = "";
 			}
@@ -55,44 +53,47 @@ public class AddressFilter {
 			//System.out.println(numbers);
 			String[] numbersArray = numbers.split("[\\s,]");
 			if(numbersArray[0].length() == 4) {
-				output[3] = numbersArray[0];
+				output[4] = numbersArray[0];
 			} else {
 				Boolean end = false;
 				int i = 0;
 				for(i = 0; i < numbersArray.length && !end; i ++) {
 					if(!numbersArray[i].equals("") && !numbersArray[i].equals(" ")) {
 						output[1] = numbersArray[i];
+						output[2] = "";
 						end = true;
 					}
 				}
-				output[3] = numbersArray[numbersArray.length - 1];
+				output[4] = numbersArray[numbersArray.length - 1];
 				while(i < numbersArray.length - 1) {
-					if(output[2] == null) {
-						output[2] = numbersArray[i];
+					if(output[3] == null) {
+						output[3] = numbersArray[i];
 					} else {
-						output[2] += " " + numbersArray[i];
+						output[3] += " " + numbersArray[i];
 					}
 					i++;
 				}
-				output[2] = output[2].trim();
+				output[3] = output[3].trim();
 			}
 		}
 
 		//Prints!
-		for(String s : output) {
-			System.out.println(s);
+		String returnString = "";
+		for(String str : output) {
+			returnString += str + "#";
 		}
-		System.out.println("Dansesmølf");
+		
+		return returnString.substring(0, returnString.length() - 1);
 	}
 
 	/**
 	 * The first try, where I tried to split the string up in
 	 * all it's different parts, and match them against RegEx.
 	 */
-	public void test2() {
-		System.out.println("Input: " + input);
-		input = input.replaceAll(",", " ").toLowerCase();
-		String[] inputArray = input.split("\\s");
+	/*public void test2() {
+		System.out.println("Input: " + s);
+		s = s.replaceAll(",", " ").toLowerCase();
+		String[] inputArray = s.split("\\s");
 		for(String s : inputArray) {
 			System.out.println(s);
 		}
@@ -122,14 +123,14 @@ public class AddressFilter {
 		for(String s : output) {
 			System.out.println(s);
 		}
-	}
+	}*/
 
 	/**
 	 * Main method!
 	 * @param args Arguments!
 	 */
 	public static void main(String[] args) throws BadUserException {
-		AddressFilter a = new AddressFilter();
-		a.test();
+		ParseAddress a = new ParseAddress();
+		System.out.println(a.parseAddress("H. C. Lundbyesvej 4A, 2300 Amager"));
 	}
 }
