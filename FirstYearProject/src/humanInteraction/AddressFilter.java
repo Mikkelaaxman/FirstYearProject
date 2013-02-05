@@ -3,7 +3,13 @@ package humanInteraction;
 import java.util.regex.*;
 
 /**
- * A class that tries to understand an address string that a user writes, and parses it into an array, to be used by the map.
+ * A class that tries to understand an address string that a user writes, 
+ * and parses it into an array, to be used by the map.
+ * The implementation assumes that the user inputs things 
+ * in the normal order (road, number, floor, zip, city).
+ * The implementation needs a number, a "," or an " i " to 
+ * function properly. Otherwise it cannot tell what is
+ * road and what is city.
  * @author jakobvase
  * @version 1.0, 30/1-2013
  */
@@ -14,13 +20,16 @@ public class AddressFilter {
 	 * Constructor. Initializes input.
 	 */
 	public AddressFilter() {
-		input = "H.C. Lumbyes Gade 1,2 2100 Kobenhavn S";
+		input = "H. C. Lundbyes vej 23, 4. tv, 2500 Valby";
 	}
 
 	/**
 	 * The second and working try, where it's assumed that the information is input in the right order.
 	 */
-	public void test() {
+	public void test() throws BadUserException {
+		if(input.length() < 2) {
+			throw new BadUserException("Invalid input");
+		}
 		System.out.println("Input: " + input);
 		String[] output = new String[5];
 
@@ -73,7 +82,7 @@ public class AddressFilter {
 		for(String s : output) {
 			System.out.println(s);
 		}
-		System.out.println("Dasesmølf");
+		System.out.println("Dansesmølf");
 	}
 
 	/**
@@ -119,7 +128,7 @@ public class AddressFilter {
 	 * Main method!
 	 * @param args Arguments!
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws BadUserException {
 		AddressFilter a = new AddressFilter();
 		a.test();
 	}
